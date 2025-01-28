@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FloraPH Lite</title>
+  <link rel="stylesheet" href="FloralStyles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🌺 FloraPH Lite</h1>
+    
+    <!-- Category Tabs -->
+    <div class="tabs">
+      <button class="tab active" onclick="filterPlants('all')">All</button>
+      <button class="tab" onclick="filterPlants('flower')">Flowers</button>
+      <button class="tab" onclick="filterPlants('tree')">Trees</button>
+    </div>
+
+    <!-- Search Bar -->
+    <input type="text" id="search" placeholder="Search flowers/trees...">
+
+    <!-- Plant Grid -->
+    <div class="plant-grid" id="plantGrid"></div>
+
+    <!-- Detail Modal (hidden by default) -->
+    <div id="plantModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div id="modalContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="data/plants.json"></script>
+  <script src="FloralAnim.js"></script>
+</body>
+</html>
