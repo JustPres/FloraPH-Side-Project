@@ -99,3 +99,30 @@
     font-size: 28px;
     cursor: pointer;
   }
+  /* Modal Links */
+.modal-links {
+  margin: 15px 0;
+  display: flex;
+  gap: 15px;
+}
+
+.reference-link {
+  color: var(--green);
+  text-decoration: none;
+}
+
+.download-btn {
+  background: var(--green);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.download-btn:hover {
+  opacity: 0.8;
+}
+#smalltext {
+  font-size: 20px;
+  margin: 10px 0;
+}

@@ -1,20 +1,21 @@
 let allPlants = [];
 
-// Fetch plants
+// Fetch plants from JSON
 fetch('data/plants.json')
   .then(response => response.json())
   .then(plants => {
     allPlants = plants;
     filterPlants('all'); // Show all by default
-  });
+  })
+  .catch(error => console.error('Error loading JSON:', error));
 
-// Filter by type (flower/tree/all)
+// Filter plants by type (flower/tree/all)
 function filterPlants(type) {
   const filtered = type === 'all' 
     ? allPlants 
     : allPlants.filter(plant => plant.type === type);
 
-  // Update active tab
+  // Update active tab styling
   document.querySelectorAll('.tab').forEach(tab => 
     tab.classList.remove('active')
   );
@@ -29,15 +30,16 @@ function renderPlants(plants) {
   plantGrid.innerHTML = '';
 
   plants.forEach(plant => {
-    const card = `
-      <div class="plant-card" onclick="showDetail(${plant.id})">
-        <img src="images/${plant.image}">
-        <h3>${plant.name}</h3>
-        <p><em>${plant.scientificName}</em></p>
-        <p>Type: ${plant.type.charAt(0).toUpperCase() + plant.type.slice(1)}</p>
-      </div>
+    const card = document.createElement('div');
+    card.className = 'plant-card';
+    card.innerHTML = `
+      <img src="images/${plant.image}" alt="${plant.name}">
+      <h3>${plant.name}</h3>
+      <p><em>${plant.scientificName}</em></p>
+      <p>Type: ${plant.type.charAt(0).toUpperCase() + plant.type.slice(1)}</p>
     `;
-    plantGrid.innerHTML += card;
+    card.onclick = () => showDetail(plant.id);
+    plantGrid.appendChild(card);
   });
 }
 
@@ -54,18 +56,36 @@ document.getElementById('search').addEventListener('input', (e) => {
 // Modal functions
 function showDetail(id) {
   const plant = allPlants.find(p => p.id === id);
-  const modalContent = `
+  const modalContent = document.getElementById('modalContent');
+  
+  // Build modal content
+  modalContent.innerHTML = `
     <h2>${plant.name}</h2>
-    <img src="images/${plant.image}" style="max-width: 300px;">
+    <img src="images/${plant.image}" style="max-width: 300px; alt="${plant.name}" class="modal-image">
     <p><strong>Scientific Name:</strong> ${plant.scientificName}</p>
     <p><strong>Type:</strong> ${plant.type.charAt(0).toUpperCase() + plant.type.slice(1)}</p>
-    <p><strong>Medicinal Uses:</strong> ${plant.medicinalUses.join(', ')}</p>
-    <p>${plant.description}</p>
+    <p><strong>Region:</strong> ${plant.region}</p>
+    <p><strong>Medicinal Uses:</strong></p>
+    <ul>${plant.medicinalUses.map(use => `<li>${use}</li>`).join('')}</ul>
+    <div class="modal-links">
+      ${plant.reference ? `<a href="${plant.reference}" target="_blank" class="reference-link">🔗 Image Reference</a>` : ''}
+      ${plant.downloadLink ? `<a href="${plant.downloadLink}" download class="download-btn">⬇️ Download Image</a>` : ''}
+    </div>
+    <p class="description">${plant.description}</p>
   `;
-  document.getElementById('modalContent').innerHTML = modalContent;
+
+  // Show modal
   document.getElementById('plantModal').style.display = 'block';
 }
 
 function closeModal() {
   document.getElementById('plantModal').style.display = 'none';
 }
+
+// Close modal when clicking outside
+window.onclick = (event) => {
+  const modal = document.getElementById('plantModal');
+  if (event.target === modal) {
+    modal.style.display = 'none';
+  }
+};
